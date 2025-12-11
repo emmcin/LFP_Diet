@@ -1,5 +1,5 @@
 # LFP_Diet
-This repository contains code to perform the bioinformatic pipeline and statistical analysis for the manuscript *TITLE*.
+This repository contains code to perform the bioinformatic pipeline and statistical analysis for the manuscript *Biogeography, sex and body mass shape the fungal diet an endangered mycophagous mammal*.
 
 ## Authors
 <b>Emily McIntyre<sup>1</sup>, Craig Nitschke<sup>1</sup>, Francisco Encinas-Viso<sup>2</sup>, Tony Mitchell<sup>3</sup>, Camille Truong<sup>4,5</sup></b>

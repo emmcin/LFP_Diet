@@ -15,13 +15,15 @@ library(MuMIn)
 library(car)
 library(emmeans)
 library(glmmTMB)
+library(dplyr)
 
 # 0. Visualise sample collections ----
 
-# 3 datasets:
+# 4 datasets:
 ## 1: Samples from 5 sites between 1993-95
 ## 2: Samples from Watchmaker and Bellbird between 1998-2005
-## 3: Samples from Bellbird with data on elevation of scat collection
+## 3: Samples from Watchmaker to test LFP traits
+## 4: Samples from Bellbird with topographic data 
 
 # Filter for each dataset and combine into one physeq object 
 
@@ -590,25 +592,33 @@ alphadiv_ecm <- cbind(diversity, meta)
 
 # Read in file with elevation of each scat sample collection at Bellbird
 topography <- read.csv('data/topography.csv')
-topography <- topography %>% rename(Elevation = Elevation.of.trap.across.trapping.grid..m.a.s.l.)
 
 # Merge dataframe with alpha diversity data 
 ecm_topography <- merge(alphadiv_ecm, topography, by = "Sample")
-ecm_topography$Elevation <- as.numeric(ecm_topography$Elevation) 
-ecm_topography <- ecm_topography %>% filter(Elevation != 0) # Remove records missing an elevation
+ecm_topography$TWI <- as.numeric(ecm_topography$TWI) 
+ecm_topography$Slope <- as.numeric(ecm_topography$Slope) 
+ecm_topography$Aspect <- as.numeric(ecm_topography$Aspect) 
+ecm_topography <- ecm_topography %>% filter(TWI != 0) # Remove records missing values
+
+
+#convert aspect to eastness and northness
+
+ecm_topography$eastness <- sin(ecm_topography$Aspect * (pi/180))
+ecm_topography$northness <- cos(ecm_topography$Aspect * (pi/180))
+
 
 ### 4.1.2. GLM ----
 
 
-nb_model <- glm.nb(Observed ~  Elevation , data = ecm_topography) 
+nb_model <- glm.nb(Observed ~  eastness , data = ecm_topography) # (change variable to test TWI, Slope, Aspect)
 summary(nb_model)
 
-season_nb_glm  <- glmmTMB(Observed ~ Elevation + (1 | Season), family = nbinom2(link = "log"), data = ecm_topography) # Test the effect of Elevation when season is included as random effect
+season_nb_glm  <- glmmTMB(Observed ~ Slope + (1 | Season), family = nbinom2(link = "log"), data = ecm_topography) # Test the effect of topography when season is included as random effect
 summary(season_nb_glm)
 
 # Plot
-ggplot(ecm_topography, aes(x = Elevation, y = Observed )) +
-  geom_point() + geom_smooth(method = "lm")+ labs(title = "ECM richness in scats collected across a topographic gradient", x = "Elevation (m.a.s.l)", y = "ECM Richness")
+ggplot(ecm_topography, aes(x = TWI, y = Observed )) +
+  geom_point() + geom_smooth(method = "lm")+ labs(title = "ECM richness in scats collected across a topographic gradient", x = "TWI", y = "ECM Richness")
 
 
 
@@ -634,24 +644,33 @@ meta <- cbind(meta, filtered_reads)
 diversity <-estimate_richness(truffle_ecm, measures=c("Observed", "Chao1", "Shannon", "Simpson"))
 alphadiv_truffle_ecm <- cbind(diversity, meta)
 
-# Read in file with elevation of each scat sample collection at Bellbird
+# Read in file with topography of each scat sample collection at Bellbird
 topography <- read.csv('data/topography.csv')
-topography <- topography %>% rename(Elevation = Elevation.of.trap.across.trapping.grid..m.a.s.l.)
+
 
 # Merge dataframe with alpha diversity data 
 truffle_ecm_topography <- merge(alphadiv_truffle_ecm, topography, by = "Sample")
-truffle_ecm_topography$Elevation <- as.numeric(truffle_ecm_topography$Elevation) 
-truffle_ecm_topography <- truffle_ecm_topography %>% filter(Elevation != 0) # Remove records missing an elevation
+truffle_ecm_topography$TWI <- as.numeric(truffle_ecm_topography$TWI) 
+truffle_ecm_topography$Slope <- as.numeric(truffle_ecm_topography$Slope) 
+truffle_ecm_topography$Aspect <- as.numeric(truffle_ecm_topography$Aspect) 
+truffle_ecm_topography <- truffle_ecm_topography %>% filter(TWI != 0) # Remove records missing values
+
+# convert aspect to eastness and northness
+
+truffle_ecm_topography$eastness <- sin(truffle_ecm_topography$Aspect * (pi/180))
+truffle_ecm_topography$northness <- cos(truffle_ecm_topography$Aspect * (pi/180))
+
+
 
 ### 4.2.2. GLM ----
 
-nb_model <- glm.nb(Observed ~  Elevation , data = truffle_ecm_topography) 
+nb_model <- glm.nb(Observed ~  northness , data = truffle_ecm_topography)  # (change variable to test TWI, Slope, Aspect)
 summary(nb_model)
 
-season_nb_glm  <- glmmTMB(Observed ~ Elevation + (1 | Season), family = nbinom2(link = "log"), data = truffle_ecm_topography) # Test the effect of Elevation when season is included as random effect
+season_nb_glm  <- glmmTMB(Observed ~ TWI + (1 | Season), family = nbinom2(link = "log"), data = truffle_ecm_topography) # Test the effect of topography when season is included as random effect
 summary(season_nb_glm)
 
 # Plot
-ggplot(truffle_ecm_topography, aes(x = Elevation, y = Observed )) +
-  geom_point() + geom_smooth(method = "lm")+ labs(title = "truffle_ecm richness in scats collected across a topographic gradient", x = "Elevation (m.a.s.l)", y = "truffle_ecm Richness")
+ggplot(truffle_ecm_topography, aes(x = TWI, y = Observed )) +
+  geom_point() + geom_smooth(method = "lm")+ labs(title = "truffle_ecm richness in scats collected across a topographic gradient", x = "TWI", y = "truffle_ecm Richness")
 
