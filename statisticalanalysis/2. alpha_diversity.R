@@ -45,7 +45,7 @@ sample_data_df <- data.frame(sample_data(data))
 merged_df <- merge(sample_data_df, topography, by = "Sample") # Merge physeq sample data with data on topographic position of sample collection
 row.names(merged_df) <- merged_df$Sample
 sample_data(data) <- merged_df
-non_zero <- merged_df$Elevation != 0
+non_zero <- merged_df$Slope != 0
 data <- prune_samples(non_zero, data)
 dataset3 <- data
 
@@ -590,7 +590,7 @@ meta <- cbind(meta, filtered_reads)
 diversity <-estimate_richness(ecm, measures=c("Observed", "Chao1", "Shannon", "Simpson"))
 alphadiv_ecm <- cbind(diversity, meta)
 
-# Read in file with elevation of each scat sample collection at Bellbird
+# Read in file with topographical position of each scat sample collection at Bellbird
 topography <- read.csv('data/topography.csv')
 
 # Merge dataframe with alpha diversity data 
@@ -646,7 +646,6 @@ alphadiv_truffle_ecm <- cbind(diversity, meta)
 
 # Read in file with topography of each scat sample collection at Bellbird
 topography <- read.csv('data/topography.csv')
-
 
 # Merge dataframe with alpha diversity data 
 truffle_ecm_topography <- merge(alphadiv_truffle_ecm, topography, by = "Sample")
