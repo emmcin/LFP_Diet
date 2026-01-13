@@ -1,6 +1,8 @@
 # LFP_Diet
 This repository contains code to perform the bioinformatic pipeline and statistical analysis for the manuscript *Biogeography, sex and body mass shape the fungal diet an endangered mycophagous mammal*.
 
+Raw sequence data has been deposited in the NCBI Sequence Read Archive (accession #PRJNA1313130).
+
 ## Authors
 <b>Emily McIntyre<sup>1</sup>, Camille Truong<sup>2,3</sup>, Francisco Encinas-Viso<sup>4</sup>, Tony Mitchell<sup>5</sup>, Craig Nitschke<sup>1</sup> </b>
 

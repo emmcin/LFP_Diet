@@ -1,4 +1,4 @@
-# Purpose: Statistical analysis of differences in truffle-like fungal richness between seasons, geography, and LFP traits
+# Purpose: Statistical analysis of differences in truffle-like fungal richness between seasons, geography, topography, and LFP traits
 
 # Load packages 
 
@@ -91,7 +91,7 @@ ggplot(location_year_count, aes(x = Year, y = Sample_Count, fill = Location)) +
     y = "Number of Samples") + 
   theme_light() +
   scale_x_discrete(breaks = c(1993,1995,1997,1999,2001,2003,2005,2007,2009,2011,2013)) + 
-  theme(    legend.key.size = unit(0.5, "cm"))
+  theme(legend.key.size = unit(0.5, "cm"))
 
 
 # 1. Samples at all sites between 1993-1995 ----
@@ -226,8 +226,6 @@ AIC(nb_model,nb_model_null)
 anova(nb_model,nb_model_null) # Selected model not significantly better than the null model
 
 
-
-
 ## 1.2. Truffle-like Ectomycorrhizal fungi ----
 
 ecm.list=row.names(guild_table)[which(guild_table$primary_lifestyle=="ectomycorrhizal")] # Filter for ECM taxa
@@ -349,8 +347,6 @@ nb_model_null<- glm.nb(Observed ~  1 , data = alphadiv_truffle_ecm)
 summary(nb_model_null)
 AIC(nb_model,nb_model_null)
 anova(nb_model,nb_model_null) # Selected model not significantly better than the null model
-
-
 
 
 
@@ -619,7 +615,6 @@ summary(season_nb_glm)
 # Plot
 ggplot(ecm_topography, aes(x = TWI, y = Observed )) +
   geom_point() + geom_smooth(method = "lm")+ labs(title = "ECM richness in scats collected across a topographic gradient", x = "TWI", y = "ECM Richness")
-
 
 
 

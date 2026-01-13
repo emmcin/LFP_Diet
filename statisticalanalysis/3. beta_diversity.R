@@ -1,4 +1,4 @@
-# Purpose: Statistical analysis changes in truffle-like fungal community composition between seasons and with changes in climate 
+# Purpose: Statistical analysis changes in truffle-like fungal community composition between between seasons, geography, topography, and LFP traits
 
 # Load packages 
 
@@ -1914,9 +1914,6 @@ bray_dist <- vegdist(otu_table, method = "bray")
 
 permanova_result <- adonis2(bray_dist ~ northness , data = sampledf)
 print(permanova_result)   # Composition does not differ differ significantly across topographic gradient
-
-
-
 
 
 
